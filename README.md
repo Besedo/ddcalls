@@ -1,4 +1,5 @@
-# [ddcalls](https://github.com/EBazarov/ddcalls) [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+# [ddcalls](https://github.com/EBazarov/ddcalls) - simple API calls for [DeepDetect](https://github.com/beniz/deepdetect)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 > ddcalls is a library for simply configurable training and prediction calls to DeepDetect server
 
 ## Introduction
