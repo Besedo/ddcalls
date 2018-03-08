@@ -10,7 +10,7 @@ ddcalls was tested on Python3.5+.
 
 You can install it via pip
 ```
-$ pip install git+https://github.com/EBazarov/ddcalls
+$ pip install git+https://github.com/Besedo/ddcalls
 ```
 
 
