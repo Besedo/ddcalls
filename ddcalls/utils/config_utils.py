@@ -59,4 +59,11 @@ def update_config(config, new_params, stage="train"):
     elif stage == "predict" and config.get("predict"):
         if new_params.get("data"):
             config["predict"]["data"] = [d.strip() for d in new_params["data"].split(",")]
+    # class weights should be float DD has a problem to parse int to float
+    try:
+        cw = config["train"]["parameters"]["mllib"]["class_weights"]
+        cw = [float(w) for w in cw]
+        config["train"]["parameters"]["mllib"]["class_weights"] = cw
+    except KeyError:
+        pass
     return config
