@@ -38,6 +38,10 @@ class DDBoard(object):
         for key in obs:
             if key != "iteration":
                 log_value(key, obs[key], int(obs["iteration"]))
+            # We do not log remain_time_str as we have remain in int
+            if key == "remain_time_str":
+                continue
+
 
     def ddb_logger_file(self, json_file):
         """json_file = the json file to be analyzed"""
