@@ -6,7 +6,9 @@
 
 import os
 import sys
+import glob
 import json
+import regex
 import argparse
 from itertools import islice
 from datetime import datetime
@@ -55,8 +57,19 @@ def predict(opt=None):
     repository = config["service"]["model"]["repository"]
     assert os.path.isdir(repository), "Wrong path to repository: {}".format(repository)
 
+    path_w = config['service']['model'].get('weights', None)
+
+    if path_w:
+        w_iter = int(regex.findall("[0-9]+", os.path.basename(path_w))[0])
+    else:
+        # finding iteration of last weight
+        w_iter = np.max([int(regex.findall("[0-9]+", os.path.basename(p))[0]) for p in glob.glob("{}/*.caffemodel".format(opt.repository))])
+
+    path_preds = "{}/predictions_{}".format(repository, w_iter)
+    os.makedirs(path_preds, exist_ok=True)
+
     # logger for logs
-    log = get_logger(repository, "{}_predict.log".format(timestamp))
+    log = get_logger(path_preds, "{}_predict.log".format(timestamp))
 
     log.info(bcolors.HEADER + "running PREDICTION script" + bcolors.ENDC)
     log.info("-> checking paths to prediction data")
@@ -99,8 +112,6 @@ def predict(opt=None):
     ####### Prediction
     log.info(bcolors.HEADER + "-> model predictions" + bcolors.ENDC)
     log.info(json.dumps(config["predict"], indent=4, sort_keys=True))
-    path_preds = os.path.join(repository, "predictions")
-    os.makedirs(path_preds, exist_ok=True)
 
     for data in config["predict"]["data"]:
         log.info(bcolors.OKGREEN + "-> prediction for: {}".format(data) + bcolors.ENDC)
