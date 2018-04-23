@@ -105,7 +105,7 @@ def predict(opt=None):
     dd_response = dd_utils.dd_put_service(
         dd=dd,
         config=config["service"],
-        for_predict=True
+        resume_or_predict=True
     )
     log.info(" - {}".format(dd_response))
 
