@@ -4,8 +4,8 @@
 @brief:
 """
 
-def dd_put_service(dd, config, for_predict=False):
-    if for_predict:
+def dd_put_service(dd, config, resume_or_predict=False):
+    if resume_or_predict:
         # removing template for prediction because network weights exist
         config["parameters"]["mllib"].pop("template", None)
 

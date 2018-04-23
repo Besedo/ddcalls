@@ -20,6 +20,7 @@ from ddcalls.utils.os_utils import bcolors
 from ddcalls.utils.dd_board_logger import DDBoard
 from ddcalls.utils.logging_utils import get_logger, str2bool
 
+
 def get_opt():
     parser = argparse.ArgumentParser("""DeepDetect training script""")
     parser.add_argument("--path_dd_config", type=str)
@@ -34,6 +35,7 @@ def get_opt():
     parser.add_argument("--gpu", type=str2bool, default=None)
     parser.add_argument("--gpuid", type=int, default=None)
     parser.add_argument("--templates", type=str, default=None)
+    parser.add_argument("--resume", type=str2bool, default=None)    
 
     opt = parser.parse_args()
     return opt
@@ -97,7 +99,7 @@ def train(opt=None):
     dd_response = dd_utils.dd_put_service(
         dd=dd,
         config=config["service"],
-        for_predict=False
+        resume_or_predict=opt['resume']
     )
     log.info(" - {}".format(dd_response))
 
