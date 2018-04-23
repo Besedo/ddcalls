@@ -56,6 +56,9 @@ def update_config(config, new_params, stage="train"):
     if stage == "train" and config.get("train"):
         if new_params.get("data"):
             config["train"]["data"] = [d.strip() for d in new_params["data"].split(",")]
+        # resume
+        if new_params.get("resume"):
+            config["train"]["parameters"]["mllib"]["resume"] = new_params["resume"]
     elif stage == "predict" and config.get("predict"):
         if new_params.get("data"):
             config["predict"]["data"] = [d.strip() for d in new_params["data"].split(",")]
