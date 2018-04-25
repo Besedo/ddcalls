@@ -1,0 +1,73 @@
+{
+	"service": {
+		"sname": "covert",
+		"description": "forest classification service",
+		"mllib": "caffe",
+		"type": "supervised",
+		"parameters": {
+			"input": {
+				"connector": "csv"
+			},
+			"mllib": {
+                "template": "mlp",
+                "nclasses": 7,
+				"layers": [150,150,150],
+				"activation": "prelu"
+			},
+			"output":{}
+		},
+		"model": {
+            "repository": "models/covert",
+			"templates": "../templates/caffe"
+		}
+	},
+	"train": {
+		"async": true,
+        "data":["models/covert/train.csv"],
+		"parameters":{
+            "input":{
+                "label_offset":-1,
+                "label":"Cover_Type",
+                "id":"Id",
+                "separator":",",
+                "shuffle":true,
+                "test_split":0.1,
+                "scale":true
+                },
+			"mllib": {
+				"gpu": true,
+				"solver": {
+                    "test_interval": 100,
+                    "base_lr": 0.05,
+					"iterations": 10000
+
+				},
+				"net": {
+					"batch_size": 500
+				}
+			},
+			"output": {
+				"measure": ["acc", "mcll", "f1"]
+			}
+        }
+	},
+	"predict": {
+		"data": [
+			"models/covert/test10.csv"
+		],
+		"parameters": {
+            "input":{
+                "scale":true,
+                "min_vals":[1863,0,0,0,-146,0,0,99,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+                "max_vals":[3849,360,52,1343,554,6890,254,254,248,6993,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+            },
+            "mllib": {
+				"net": {
+					"test_batch_size": 500
+				}
+            },
+            "output": {
+			}
+		}
+	}
+}
