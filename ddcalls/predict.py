@@ -10,6 +10,7 @@ import glob
 import json
 import regex
 import argparse
+import numpy as np
 from itertools import islice
 from datetime import datetime
 
