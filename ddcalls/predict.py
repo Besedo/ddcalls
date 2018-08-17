@@ -19,7 +19,7 @@ from ddcalls.utils import dd_utils
 from ddcalls.utils import config_utils
 from ddcalls.utils.dd_client import DD
 from ddcalls.utils.os_utils import bcolors
-from ddcalls.utils.logging_utils import get_logger, str2bool
+from ddcalls.utils.logging_utils import get_logger, bool_flag
 
 
 def get_opt():
@@ -31,7 +31,7 @@ def get_opt():
     parser.add_argument("--sname", type=str, default=None)
     parser.add_argument("--data", type=str, default=None)
     parser.add_argument("--repository", type=str, default=None)
-    parser.add_argument("--gpu", type=str2bool, default=None)
+    parser.add_argument("--gpu", type=bool_flag, default=None)
     parser.add_argument("--gpuid", type=int, default=None)
     parser.add_argument("--templates", type=str, default=None)
 

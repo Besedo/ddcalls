@@ -18,7 +18,7 @@ from ddcalls.utils import config_utils
 from ddcalls.utils.dd_client import DD
 from ddcalls.utils.os_utils import bcolors
 from ddcalls.utils.dd_board_logger import DDBoard
-from ddcalls.utils.logging_utils import get_logger, str2bool
+from ddcalls.utils.logging_utils import get_logger, bool_flag
 
 
 def get_opt():
@@ -27,15 +27,15 @@ def get_opt():
     parser.add_argument("--host", type=str, default="localhost")
     parser.add_argument("--port", type=int, default=8080)
     parser.add_argument("--logdir_ddboard", type=str, default=None)
-    parser.add_argument("--use_ddboard", type=str2bool, default=False)
+    parser.add_argument("--use_ddboard", type=bool_flag, default=False)
     # Options that will overwrite config parameters
     parser.add_argument("--sname", type=str, default=None)
     parser.add_argument("--data", type=str, default=None)
     parser.add_argument("--repository", type=str, default=None)
-    parser.add_argument("--gpu", type=str2bool, default=None)
+    parser.add_argument("--gpu", type=bool_flag, default=None)
     parser.add_argument("--gpuid", type=int, default=None)
     parser.add_argument("--templates", type=str, default=None)
-    parser.add_argument("--resume", type=str2bool, default=None)    
+    parser.add_argument("--resume", type=bool_flag, default=None)
 
     opt = parser.parse_args()
     return opt

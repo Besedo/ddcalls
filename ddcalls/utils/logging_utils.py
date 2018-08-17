@@ -11,6 +11,7 @@ import argparse
 
 logging.getLogger("requests").setLevel(logging.WARNING)
 
+
 def get_logger(logdir, logname, loglevel=logging.DEBUG):
     logger = logging.getLogger(__name__)
     logger.setLevel(loglevel)
@@ -29,10 +30,21 @@ def get_logger(logdir, logname, loglevel=logging.DEBUG):
     return logger
 
 
-def str2bool(v):
-    if v.lower() in ('yes', 'true', 't', 'y', '1'):
-        return True
-    elif v.lower() in ('no', 'false', 'f', 'n', '0'):
+def bool_flag(s):
+    """
+    Parse boolean arguments from the command line.
+    """
+    if s.lower() in ['no', 'off', 'false', '0']:
         return False
-    else:
-        raise argparse.ArgumentTypeError('Boolean value expected (yes, true, t, y ,1, no, false, f, n, 0).')
+    if s.lower() in ['yes', 'on', 'true', '1']:
+        return True
+    raise argparse.ArgumentTypeError("{} invalid value for a boolean flag (yes, true, on, 1, no, false, off, 0)".format(s))
+
+
+def file_flag(s):
+    """
+    Check path to file arguments from the command line.
+    """
+    if os.path.isfile(s):
+        return s
+    raise argparse.ArgumentTypeError("{} path to file doesn't exist".format(s))
