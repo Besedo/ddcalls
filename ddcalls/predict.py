@@ -24,16 +24,16 @@ from ddcalls.utils.logging_utils import get_logger, bool_flag
 
 def get_opt():
     parser = argparse.ArgumentParser("""DeepDetect prediction script""")
-    parser.add_argument("--path_dd_config", type=str)
-    parser.add_argument("--host", type=str, default="localhost")
-    parser.add_argument("--port", type=int, default=8080)
+    parser.add_argument("--path_dd_config", type=str, help="path to ddcalls config file")
+    parser.add_argument("--host", type=str, default="localhost", help="DeepDetect host, default localhost")
+    parser.add_argument("--port", type=int, default=8080, help="DeepDetect port, default 8080")
     # Options that will overwrite config parameters
-    parser.add_argument("--sname", type=str, default=None)
-    parser.add_argument("--data", type=str, default=None)
-    parser.add_argument("--repository", type=str, default=None)
-    parser.add_argument("--gpu", type=bool_flag, default=None)
-    parser.add_argument("--gpuid", type=int, default=None)
-    parser.add_argument("--templates", type=str, default=None)
+    parser.add_argument("--sname", type=str, default=None, help="DeepDetect service name")
+    parser.add_argument("--data", type=str, default=None, help="comma separated path to data")
+    parser.add_argument("--repository", type=str, default=None, help="path to model repository")
+    parser.add_argument("--gpu", type=bool_flag, default=None, help="use GPU or CPU")
+    parser.add_argument("--gpuid", type=int, default=None, help="GPU id")
+    parser.add_argument("--templates", type=str, default=None, help="path to DeepDetect templates")
 
     opt = parser.parse_args()
     return opt
