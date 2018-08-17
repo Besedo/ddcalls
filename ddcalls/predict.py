@@ -5,9 +5,12 @@
 """
 
 import os
+import re
 import sys
+import glob
 import json
 import argparse
+import numpy as np
 from itertools import islice
 from datetime import datetime
 
@@ -16,21 +19,21 @@ from ddcalls.utils import dd_utils
 from ddcalls.utils import config_utils
 from ddcalls.utils.dd_client import DD
 from ddcalls.utils.os_utils import bcolors
-from ddcalls.utils.logging_utils import get_logger, str2bool
+from ddcalls.utils.logging_utils import get_logger, bool_flag
 
 
 def get_opt():
     parser = argparse.ArgumentParser("""DeepDetect prediction script""")
-    parser.add_argument("--path_dd_config", type=str)
-    parser.add_argument("--host", type=str, default="localhost")
-    parser.add_argument("--port", type=int, default=8080)
+    parser.add_argument("--path_dd_config", type=str, help="path to ddcalls config file")
+    parser.add_argument("--host", type=str, default="localhost", help="DeepDetect host, default localhost")
+    parser.add_argument("--port", type=int, default=8080, help="DeepDetect port, default 8080")
     # Options that will overwrite config parameters
-    parser.add_argument("--sname", type=str, default=None)
-    parser.add_argument("--data", type=str, default=None)
-    parser.add_argument("--repository", type=str, default=None)
-    parser.add_argument("--gpu", type=str2bool, default=None)
-    parser.add_argument("--gpuid", type=int, default=None)
-    parser.add_argument("--templates", type=str, default=None)
+    parser.add_argument("--sname", type=str, default=None, help="DeepDetect service name")
+    parser.add_argument("--data", type=str, default=None, help="comma separated path to data")
+    parser.add_argument("--repository", type=str, default=None, help="path to model repository")
+    parser.add_argument("--gpu", type=bool_flag, default=None, help="use GPU or CPU")
+    parser.add_argument("--gpuid", type=int, default=None, help="GPU id")
+    parser.add_argument("--templates", type=str, default=None, help="path to DeepDetect templates")
 
     opt = parser.parse_args()
     return opt
@@ -55,8 +58,19 @@ def predict(opt=None):
     repository = config["service"]["model"]["repository"]
     assert os.path.isdir(repository), "Wrong path to repository: {}".format(repository)
 
+    path_w = config['service']['model'].get('weights', None)
+
+    if path_w:
+        w_iter = int(re.findall(r"[0-9]+", os.path.basename(path_w))[0])
+    else:
+        # finding iteration of last weight
+        w_iter = np.max([int(re.findall(r"[0-9]+", os.path.basename(p))[0]) for p in glob.glob("{}/*.caffemodel".format(repository))])
+
+    path_preds = "{}/predictions_{}".format(repository, w_iter)
+    os.makedirs(path_preds, exist_ok=True)
+
     # logger for logs
-    log = get_logger(repository, "{}_predict.log".format(timestamp))
+    log = get_logger(path_preds, "{}_predict.log".format(timestamp))
 
     log.info(bcolors.HEADER + "running PREDICTION script" + bcolors.ENDC)
     log.info("-> checking paths to prediction data")
@@ -92,15 +106,13 @@ def predict(opt=None):
     dd_response = dd_utils.dd_put_service(
         dd=dd,
         config=config["service"],
-        for_predict=True
+        resume_or_predict=True
     )
     log.info(" - {}".format(dd_response))
 
     ####### Prediction
     log.info(bcolors.HEADER + "-> model predictions" + bcolors.ENDC)
     log.info(json.dumps(config["predict"], indent=4, sort_keys=True))
-    path_preds = os.path.join(repository, "predictions")
-    os.makedirs(path_preds, exist_ok=True)
 
     for data in config["predict"]["data"]:
         log.info(bcolors.OKGREEN + "-> prediction for: {}".format(data) + bcolors.ENDC)

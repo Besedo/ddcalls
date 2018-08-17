@@ -18,22 +18,24 @@ from ddcalls.utils import config_utils
 from ddcalls.utils.dd_client import DD
 from ddcalls.utils.os_utils import bcolors
 from ddcalls.utils.dd_board_logger import DDBoard
-from ddcalls.utils.logging_utils import get_logger, str2bool
+from ddcalls.utils.logging_utils import get_logger, bool_flag
+
 
 def get_opt():
     parser = argparse.ArgumentParser("""DeepDetect training script""")
-    parser.add_argument("--path_dd_config", type=str)
-    parser.add_argument("--host", type=str, default="localhost")
-    parser.add_argument("--port", type=int, default=8080)
-    parser.add_argument("--logdir_ddboard", type=str, default=None)
-    parser.add_argument("--use_ddboard", type=str2bool, default=False)
+    parser.add_argument("--path_dd_config", type=str, help="path to ddcalls config file")
+    parser.add_argument("--host", type=str, default="localhost", help="DeepDetect host, default localhost")
+    parser.add_argument("--port", type=int, default=8080, help="DeepDetect port, default 8080")
+    parser.add_argument("--logdir_ddboard", type=str, default=None, help="path to ddboard logdir")
+    parser.add_argument("--use_ddboard", type=bool_flag, default=False, help="save training metrics in tensorboard format")
     # Options that will overwrite config parameters
-    parser.add_argument("--sname", type=str, default=None)
-    parser.add_argument("--data", type=str, default=None)
-    parser.add_argument("--repository", type=str, default=None)
-    parser.add_argument("--gpu", type=str2bool, default=None)
-    parser.add_argument("--gpuid", type=int, default=None)
-    parser.add_argument("--templates", type=str, default=None)
+    parser.add_argument("--sname", type=str, default=None, help="DeepDetect service name")
+    parser.add_argument("--data", type=str, default=None, help="comma separated path to data")
+    parser.add_argument("--repository", type=str, default=None, help="path to model repository")
+    parser.add_argument("--gpu", type=bool_flag, default=None, help="use GPU or CPU")
+    parser.add_argument("--gpuid", type=int, default=None, help="GPU id")
+    parser.add_argument("--templates", type=str, default=None, help="path to DeepDetect templates")
+    parser.add_argument("--resume", type=bool_flag, default=None, help="resume training")
 
     opt = parser.parse_args()
     return opt
@@ -97,7 +99,7 @@ def train(opt=None):
     dd_response = dd_utils.dd_put_service(
         dd=dd,
         config=config["service"],
-        for_predict=False
+        resume_or_predict=opt['resume']
     )
     log.info(" - {}".format(dd_response))
 
@@ -162,6 +164,7 @@ def train(opt=None):
         sname=sname
     )
     log.info(" - {}".format(dd_response))
+
 
 def main():
     opt = vars(get_opt())

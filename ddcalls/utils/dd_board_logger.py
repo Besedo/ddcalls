@@ -36,8 +36,13 @@ class DDBoard(object):
     def ddb_logger(self, obs):
         """obs = the Python dict (aka JSON object) to be analyzed."""
         for key in obs:
+            # We do not log remain_time_str as we have remain in int
+            if key == "remain_time_str":
+                continue
             if key != "iteration":
                 log_value(key, obs[key], int(obs["iteration"]))
+
+
 
     def ddb_logger_file(self, json_file):
         """json_file = the json file to be analyzed"""
