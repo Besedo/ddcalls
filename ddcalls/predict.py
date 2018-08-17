@@ -5,10 +5,10 @@
 """
 
 import os
+import re
 import sys
 import glob
 import json
-import regex
 import argparse
 import numpy as np
 from itertools import islice
@@ -61,10 +61,10 @@ def predict(opt=None):
     path_w = config['service']['model'].get('weights', None)
 
     if path_w:
-        w_iter = int(regex.findall("[0-9]+", os.path.basename(path_w))[0])
+        w_iter = int(re.findall(r"[0-9]+", os.path.basename(path_w))[0])
     else:
         # finding iteration of last weight
-        w_iter = np.max([int(regex.findall("[0-9]+", os.path.basename(p))[0]) for p in glob.glob("{}/*.caffemodel".format(opt.repository))])
+        w_iter = np.max([int(re.findall(r"[0-9]+", os.path.basename(p))[0]) for p in glob.glob("{}/*.caffemodel".format(opt.repository))])
 
     path_preds = "{}/predictions_{}".format(repository, w_iter)
     os.makedirs(path_preds, exist_ok=True)

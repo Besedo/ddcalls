@@ -165,6 +165,7 @@ def train(opt=None):
     )
     log.info(" - {}".format(dd_response))
 
+
 def main():
     opt = vars(get_opt())
     train(opt)
