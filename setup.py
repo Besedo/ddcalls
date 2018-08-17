@@ -5,7 +5,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='ddcalls',
-    version='0.0.1',
+    version='0.0.2',
     description='Simple configurable calls for DeepDetect in python',
     url='https://github.com/EBazarov/ddcalls',
     author='Evgeny BAZAROV',
