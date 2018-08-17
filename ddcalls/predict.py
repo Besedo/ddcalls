@@ -64,7 +64,7 @@ def predict(opt=None):
         w_iter = int(re.findall(r"[0-9]+", os.path.basename(path_w))[0])
     else:
         # finding iteration of last weight
-        w_iter = np.max([int(re.findall(r"[0-9]+", os.path.basename(p))[0]) for p in glob.glob("{}/*.caffemodel".format(opt.repository))])
+        w_iter = np.max([int(re.findall(r"[0-9]+", os.path.basename(p))[0]) for p in glob.glob("{}/*.caffemodel".format(repository))])
 
     path_preds = "{}/predictions_{}".format(repository, w_iter)
     os.makedirs(path_preds, exist_ok=True)
