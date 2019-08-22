@@ -116,7 +116,7 @@ def predict(opt=None):
 
     for data in config["predict"]["data"]:
         log.info(bcolors.OKGREEN + "-> prediction for: {}".format(data) + bcolors.ENDC)
-        if data.endswith(".svm") or data.endswith(".csv"):
+        if data.endswith(".svm") or data.endswith(".csv") or data.endswith(".img"):
             # note csv file should be one line here with header
             dd_preds = []
             batch_size = config["predict"]["parameters"]["mllib"]["net"]["test_batch_size"]
@@ -128,7 +128,10 @@ def predict(opt=None):
                     batch = list(islice(f, batch_size))
                     if not batch:
                         break
-                    batch = [line.strip() for line in batch]
+                    if data.endswith(".img"):
+                        batch = [line.split(' ')[0] for line in batch]
+                    else:
+                        batch = [line.strip() for line in batch]
                     dd_response = dd_utils.dd_post_predict(
                         dd=dd,
                         sname=sname,
