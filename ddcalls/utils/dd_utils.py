@@ -29,7 +29,7 @@ def dd_post_train(dd, sname, config):
         parameters_input=config["parameters"]["input"],
         parameters_mllib=config["parameters"]["mllib"],
         parameters_output=config["parameters"]["output"],
-        async=config["async"]
+        async_=config["async"]
     )
     assert dd_response['status']['code'] == 201 and dd_response['status']['msg'] == "Created", dd_response
     return dd_response
