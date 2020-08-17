@@ -129,7 +129,7 @@ def predict(opt=None):
                     while True:
                         batch = list(islice(f, 1))
                         if "_FAKEDATA_" not in batch[0]:
-                            batch = [line.split(' ')[0] for line in batch]
+                            batch = [line.strip().split()[0] for line in batch]
                             dd_response = dd_utils.dd_post_predict(
                                 dd=dd,
                                 sname=sname,
@@ -143,7 +143,7 @@ def predict(opt=None):
                     if not batch:
                         break
                     if data.endswith(".img"):
-                        batch = [line.split(' ')[0] for line in batch]
+                        batch = [line.strip().split()[0] for line in batch]
                     else:
                         batch = [line.strip() for line in batch]
                     dd_response = dd_utils.dd_post_predict(
