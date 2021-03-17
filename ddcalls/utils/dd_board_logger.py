@@ -40,7 +40,8 @@ class DDBoard(object):
             if key == "remain_time_str":
                 continue
             if key != "iteration":
-                log_value(key, obs[key], int(obs["iteration"]))
+                iteration = int(obs.get("iteration", 0))
+                log_value(key, obs[key], iteration)
 
 
 
