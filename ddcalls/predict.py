@@ -146,12 +146,17 @@ def predict(opt=None):
                         batch = [line.strip().split()[0] for line in batch]
                     else:
                         batch = [line.strip() for line in batch]
-                    dd_response = dd_utils.dd_post_predict(
-                        dd=dd,
-                        sname=sname,
-                        data=batch,
-                        config=config["predict"]
-                    )
+                    try:
+                        dd_response = dd_utils.dd_post_predict(
+                            dd=dd,
+                            sname=sname,
+                            data=batch,
+                            config=config["predict"]
+                        )
+                    except Exception as e:
+                        print(e)
+                        print(batch)
+                        continue
                     dd_preds.append(dd_response)
         else:
             dd_response = dd_utils.dd_post_predict(
